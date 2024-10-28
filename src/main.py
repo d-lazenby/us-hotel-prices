@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import pandas as pd
 import time
 
+from src.paths import DATA_DIR
 
 def initial_search(state: str, year_month: str, day: str, timeout: int = 20):
 
@@ -27,7 +28,7 @@ def initial_search(state: str, year_month: str, day: str, timeout: int = 20):
     time.sleep(1)
     select_year_month = Select(year_month)
     time.sleep(1)
-    select_year_month.select_by_value(f"{y_m}")
+    select_year_month.select_by_value(f"{year_month}")
 
     time.sleep(2)
     day = WebDriverWait(driver, timeout).until(
@@ -36,7 +37,7 @@ def initial_search(state: str, year_month: str, day: str, timeout: int = 20):
     time.sleep(1)
     select_day = Select(day)
     time.sleep(1)
-    select_day.select_by_value(f"{d}")
+    select_day.select_by_value(f"{day}")
 
     time.sleep(2)
     search = WebDriverWait(driver, timeout).until(
@@ -45,7 +46,7 @@ def initial_search(state: str, year_month: str, day: str, timeout: int = 20):
     search.click()
 
 
-def scrape_page(quit_driver: bool = True) -> pd.DataFrame:
+def scrape_page(url: str, quit_driver: bool = False) -> pd.DataFrame:
     # Scroll and scrape prices until the target count is reached
     while len(prices) < target_price_count:
         # Scrape the currently visible prices
@@ -80,15 +81,30 @@ def scrape_page(quit_driver: bool = True) -> pd.DataFrame:
     if quit_driver:
         driver.quit()
 
+    print(f"Successfully scraped {len(prices)} records")
+
     return pd.DataFrame({"title": titles, "price": prices, "rating": ratings})
+
+DEC_DAYS = ["4", "11", "18", "25", "7", "14", "21", "28"]
+JAN_DAYS = ["1", "8", "15", "22", "29", "4", "11", "18", "25"]
+FEB_DAYS = ["5", "12", "19", "26", "1", "8", "15", "22"]
+
+DATES = {
+    "2024-12": DEC_DAYS,
+    "2025-1": JAN_DAYS,
+    "2025-2": FEB_DAYS,
+}
+
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_experimental_option("detach", True)
-chrome_options.add_argument("--headless")
+# chrome_options.add_argument("--headless")
 
 driver = webdriver.Chrome(options=chrome_options)
-# driver.implicitly_wait(10)
+driver.implicitly_wait(10)
 # driver.get("https://www.booking.com/")
+
+
 # parent = driver.current_window_handle
 # uselessWindows = driver.window_handles
 # for winId in uselessWindows:
@@ -96,41 +112,40 @@ driver = webdriver.Chrome(options=chrome_options)
 #         driver.switch_to.window(winId)
 #         driver.close()
 
-driver.get(
-    "https://www.booking.com/searchresults.en-gb.html?ss=Michigan%2C+United+States&efdco=1&label=gen173nr-1BCAEoggI46AdIM1gEaFCIAQGYAQm4AQfIAQzYAQHoAQGIAgGoAgO4ApCU-LgGwAIB0gIkMzA0ZGY2ZDMtYTcxOC00MWNmLWI0NDItODY0MDE4OWVjODU02AIF4AIB&sid=8ff74c491f5acb5d5cbe3c5ba7a99c0d&aid=304142&lang=en-gb&sb=1&src_elem=sb&src=index&dest_id=3003&dest_type=region&ac_position=0&ac_click_type=b&ac_langcode=en&ac_suggestion_list_length=5&search_selected=true&search_pageview_id=42a34be79bef0260&ac_meta=GhA0MmEzNGJlNzliZWYwMjYwIAAoATICZW46EU1pY2hpZ2FuLCBVbml0ZWQgQABKAFAA&checkin=2024-12-01&checkout=2024-12-02&group_adults=2&no_rooms=1&group_children=0"
-)
-
-DEC_DAYS = ["4",  "11", "18", "25", "7", "14", "21", "28"]
-JAN_DAYS = ["1", "8", "15", "22", "29", "4", "11", "18", "25"]
-FEB_DAYS = ["5", "12", "19", "26", "1", "8", "15", "22"]
-
-DATES = {
-    "2024-12": DEC_DAYS, 
-    "2025-1": JAN_DAYS,
-    "2025-2": FEB_DAYS,
-    }
-
-state = "Michigan"
-y_m = "2024-12"
-d = "1"
 
 # 1. MAKE SEARCH
 # initial_search(state=state, year_month=y_m, day=d)
 
 # 2. SCRAPE PRICES
-titles, prices, ratings = [], [], []
-target_price_count = 100
-results = scrape_page()
 
-# 3. SAVE RESULTS
-df = pd.DataFrame(columns=["title", "price", "rating"])
-df = pd.concat([df, results])
-df['state'] = state
-df['year_month'] = y_m
-df['day'] = d
+state = "Nevada"
+for month in DATES.keys():
+    for day in DATES.get(month):
+        
+        url = f"https://www.booking.com/searchresults.en-gb.html?ss=nevada%2C+united+states&label=gen173nr-1BCAEoggI46AdIM1gEaFCIAQGYAQm4AQfIAQzYAQHoAQGIAgGoAgO4ApCU-LgGwAIB0gIkMzA0ZGY2ZDMtYTcxOC00MWNmLWI0NDItODY0MDE4OWVjODU02AIF4AIB&sid=8ff74c491f5acb5d5cbe3c5ba7a99c0d&aid=304142&lang=en-gb&sb=1&src_elem=sb&src=index&dest_id=2326&dest_type=region&ac_position=0&ac_click_type=b&ac_langcode=en&ac_suggestion_list_length=5&search_selected=true&search_pageview_id=d7cd909ec9db0708&ac_meta=GhBkN2NkOTA5ZWM5ZGIwNzA4IAAoATICZW46FW5ldmFkYSwgdW5pdGVkIHN0YXRlc0AASgBQAA%3D%3D&checkin={month}-{int(day):02d}&checkout={month}-{int(day)+1:02d}&group_adults=2&no_rooms=1&group_children=0"
+        try:
+            time.sleep(10)
+            driver.get(url)
+            print(f"Accessed URL for {state}, {month}-{day}  OK...")
+        except:
+            driver.quit()
+            print(f"Can't access URL for {state}, {month}-{day}.")
+            print("Trying next day...")
+            continue
+        titles, prices, ratings = [], [], []
+        target_price_count = 100
+        results = scrape_page(url=url, quit_driver=False)
 
-file_name = f"{state}_{y_m}_{d}"
+        # 3. SAVE RESULTS
+        df = pd.DataFrame(columns=["title", "price", "rating"])
+        df = pd.concat([df, results])
+        df['state'] = state
+        df['year_month'] = month
+        df['day'] = day
 
-df.to_csv(f'../data/{file_name}.csv', index=False)
+        file_path = DATA_DIR / f"{state}_{month}_{day}.csv"
+
+        df.to_csv(file_path, index=False)
+        print(f"Scraped records for {state}, {month}-{day}, saved to {file_path}")
 
 driver.quit()
