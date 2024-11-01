@@ -1,9 +1,16 @@
 from pathlib import Path
+import os
 
 PARENT_DIR = Path(__file__).parent.resolve().parent
 
 DATA_DIR = PARENT_DIR / "data"
 OXFORD_DATA_DIR = PARENT_DIR / "oxford_data"
+
+if not Path(DATA_DIR).exists():
+    os.mkdir(DATA_DIR)
+
+if not Path(OXFORD_DATA_DIR).exists():
+    os.mkdir(OXFORD_DATA_DIR)
 
 STATES = [
     "Connecticut",
