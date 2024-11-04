@@ -26,13 +26,13 @@ The analysis itself can be found in `notebooks/oxford_analysis.ipynb`.
 ### 3. If a car travels to point A at 60mph and returns from point A to it's original position at 20mph, what is the average speed of the car?
 
 The average speed $s$ is given by
-$$
+```math
 s = \frac{\textrm{Total distance travelled from A to B and back}}{\textrm{Total time taken}}.
-$$
+```
 If the distance from A to B is $d$, the total distance is given by $D = 2d$ while the total time taken is $T = \frac{d}{60} + \frac{d}{20} = \frac{d}{15}$. The average speed is then 
-$$
+```math
 s = \frac{D}{T} = \frac{2d}{\frac{d}{15}} = 30~\textrm{mph}.
-$$
+```
 
 ### 4. Use Booking.com or similar source to scrape US hotel prices to determine and rank which US States have the cheapest winter hotels.
 
