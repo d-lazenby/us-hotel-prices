@@ -316,6 +316,8 @@ with st.sidebar:
         The green/red values give the comparison to the US as a whole.
         - :blue[**Monthly Prices**]: Average monthly hotel prices for the selected state; the cheapest month  
         is highlighted in blue. 
+        - :blue[**Heatmap**]: This is ordered by average price, so you'll find the cheaper states to the left 
+        and the more expensive ones to the right. 
         """
     )
 
