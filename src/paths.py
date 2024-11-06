@@ -5,12 +5,17 @@ PARENT_DIR = Path(__file__).parent.resolve().parent
 
 DATA_DIR = PARENT_DIR / "data"
 OXFORD_DATA_DIR = PARENT_DIR / "oxford_data"
+DASHBOARD_DATA_DIR = PARENT_DIR / "dashboard_data"
 
 if not Path(DATA_DIR).exists():
     os.mkdir(DATA_DIR)
 
 if not Path(OXFORD_DATA_DIR).exists():
     os.mkdir(OXFORD_DATA_DIR)
+
+if not Path(DASHBOARD_DATA_DIR).exists():
+    os.mkdir(DASHBOARD_DATA_DIR)
+
 
 STATES = [
     "Connecticut",
@@ -53,6 +58,59 @@ STATES = [
     "Wisconsin",
     "Wyoming",
 ]
+
+STATE_MAPPING = {
+    "Alabama": "AL",
+    "Alaska": "AK",
+    "Arizona": "AZ",
+    "Arkansas": "AR",
+    "California": "CA",
+    "Colorado": "CO",
+    "Connecticut": "CT",
+    "Delaware": "DE",
+    "Florida": "FL",
+    "Georgia": "GA",
+    "Hawaii": "HI",
+    "Idaho": "ID",
+    "Illinois": "IL",
+    "Indiana": "IN",
+    "Iowa": "IA",
+    "Kansas": "KS",
+    "Kentucky": "KY",
+    "Louisiana": "LA",
+    "Maine": "ME",
+    "Maryland": "MD",
+    "Massachusetts": "MA",
+    "Michigan": "MI",
+    "Minnesota": "MN",
+    "Mississippi": "MS",
+    "Missouri": "MO",
+    "Montana": "MT",
+    "Nebraska": "NE",
+    "Nevada": "NV",
+    "NewHampshire": "NH",
+    "NewJersey": "NJ",
+    "NewMexico": "NM",
+    "NewYork": "NY",
+    "NorthCarolina": "NC",
+    "NorthDakota": "ND",
+    "Ohio": "OH",
+    "Oklahoma": "OK",
+    "Oregon": "OR",
+    "Pennsylvania": "PA",
+    "RhodeIsland": "RI",
+    "SouthCarolina": "SC",
+    "SouthDakota": "SD",
+    "Tennessee": "TN",
+    "Texas": "TX",
+    "Utah": "UT",
+    "Vermont": "VT",
+    "Virginia": "VA",
+    "Washington": "WA",
+    "WestVirginia": "WV",
+    "Wisconsin": "WI",
+    "Wyoming": "WY",
+}
 
 
 URLS = [
